@@ -1,21 +1,21 @@
-clear;  % ë§¤ëª¨ë¦¬ ì •ë¦¬
-clc;    % ì½˜ì†”ì°½ ì •ë¦¬
+clear;  % ¸Å¸ğ¸® Á¤¸®
+clc;    % ÄÜ¼ÖÃ¢ Á¤¸®
 
-% ì›ë³¸ ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ ë¦¬ì‚¬ì´ì¦ˆ í›„ ì €ì¥í•©ë‹ˆë‹¤.
+% ¿øº» µ¥ÀÌÅÍ¸¦ ºÒ·¯ ¸®»çÀÌÁî ÈÄ ÀúÀåÇÕ´Ï´Ù.
 [m_raw, fs, audio_length] = audioread_resize('example_wav_8bit_44100hz.wav');
 
-% ì™¼ìª½, ì˜¤ë¥¸ìª½ ì •ë³´ë¥¼ ê°ê° ë‚˜ëˆ•ë‹ˆë‹¤.
+% ¿ŞÂÊ, ¿À¸¥ÂÊ Á¤º¸¸¦ °¢°¢ ³ª´¯´Ï´Ù.
 m_left  = m_raw(:, 1);
 m_right = m_raw(:, 2);
 
-% modulation ì‹œì‘í•©ë‹ˆë‹¤.
+% modulation ½ÃÀÛÇÕ´Ï´Ù.
 w = 4000;
 fc1 = w*2+1000;
 fc2 = fc1+w*2+3000;
 N = fs * audio_length;
 t  = 0 : 1/fs : (N-1)*(1/fs);  
 
-% high frequancy ì •ë³´ëŠ” ì¢€ ë²„ë ¤ì•¼ í•©ë‹ˆë‹¤. ì „ë¶€ ë³´ë‚¼ìˆ˜ëŠ” ì—†ìœ¼ë‹ˆ;
+% high frequancy Á¤º¸´Â Á» ¹ö·Á¾ß ÇÕ´Ï´Ù. ÀüºÎ º¸³¾¼ö´Â ¾øÀ¸´Ï;
 [b, a] = butter(5, w/(fs/2), 'low');
 m_left  = filter(b, a, m_left);
 m_right = filter(b, a, m_right);
@@ -29,12 +29,12 @@ m_right_modulated   = dsb_sc_modulation(m_right ...
                                         , 2     ...
                                         , fc2);
                                     
-% modulation ë
+% modulation ³¡
 
-% ì†¡ì‹ 
+% ¼Û½Å
 m_modulated = m_left_modulated + m_right_modulated;
 
-% demodulation ì‹œì‘
+% demodulation ½ÃÀÛ
 m_left_demodulated  = dsb_sc_demodulation(m_modulated   ...
                                           , t           ...
                                           , 1           ...
@@ -45,36 +45,36 @@ m_right_demodulated = dsb_sc_demodulation(m_modulated   ...
                                           , 1           ...
                                           , fc2);
             
-% low pass filterë¥¼ ì ìš©í•´ ì›í•˜ëŠ” ì •ë³´ë§Œ ë½‘ì•„ëƒ…ë‹ˆë‹¤.
+% low pass filter¸¦ Àû¿ëÇØ ¿øÇÏ´Â Á¤º¸¸¸ »Ì¾Æ³À´Ï´Ù.
 [b, a] = butter(5, w/(fs/2), 'low');
 m_left_demodulated  = filter(b, a, m_left_demodulated);
 m_right_demodulated = filter(b, a, m_right_demodulated);
-% modulation ë
+% modulation ³¡
 
-% ë‹¤ì‹œ ìŠ¤í…Œë ˆì˜¤ ì˜¤ë””ì˜¤ë¡œ í•©ì¹¨
+% ´Ù½Ã ½ºÅ×·¹¿À ¿Àµğ¿À·Î ÇÕÄ§
 m_demodulated = zeros(fs*audio_length, 2);
 m_demodulated(:,1) = m_left_demodulated(:, 1);
 m_demodulated(:,2) = m_right_demodulated(:, 1);
 
-% ì›ë³¸ ë°ì´í„°ê°€ ì œëŒ€ë¡œ ë¦¬ì‚¬ì´ì¦ˆ ë˜ì—ˆëŠ”ì§€ ìŒì›ì„ ì‹¤í–‰í•´ ë´…ë‹ˆë‹¤.
-% ì›ë³¸ ë°ì´í„° frequancyë¥¼ ëŒ€ëµ 10000hz ì •ë„ë¡œ í•´ì£¼ì–´ì•¼ ê·¸ë‚˜ë§ˆ ë“¤ì„ë§Œ í•©ë‹ˆë‹¤.
+% ¿øº» µ¥ÀÌÅÍ°¡ Á¦´ë·Î ¸®»çÀÌÁî µÇ¾ú´ÂÁö À½¿øÀ» ½ÇÇàÇØ º¾´Ï´Ù.
+% ¿øº» µ¥ÀÌÅÍ frequancy¸¦ ´ë·« 10000hz Á¤µµ·Î ÇØÁÖ¾î¾ß ±×³ª¸¶ µéÀ»¸¸ ÇÕ´Ï´Ù.
 %sound(m_raw, fs);
 
-% ì›ë³¸ ë°ì´í„°ì—ì„œ low pass filterë¥¼ ì ìš©í•œ ìŒì›ì„ ì‹¤í–‰í•´ë´…ë‹ˆë‹¤.
-% ì‹¤ì œë¡œ ìš°ë¦¬ê°€ ë³´ë‚´ê²Œ ë˜ëŠ” ìŒì›ì…ë‹ˆë‹¤.
+% ¿øº» µ¥ÀÌÅÍ¿¡¼­ low pass filter¸¦ Àû¿ëÇÑ À½¿øÀ» ½ÇÇàÇØº¾´Ï´Ù.
+% ½ÇÁ¦·Î ¿ì¸®°¡ º¸³»°Ô µÇ´Â À½¿øÀÔ´Ï´Ù.
 m_lowpass = zeros(fs*audio_length, 2);
 m_lowpass(:,1) = m_left(:, 1);
 m_lowpass(:,2) = m_left(:, 1);
 sound(m_lowpass,fs);
 
-% ë§¤ì„¸ì§€ê°€ ì œëŒ€ë¡œ ë³µì›ì´ ë˜ì—ˆëŠ”ì§€ ìŒì›ì„ ì‹¤í–‰í•´ ë´…ë‹ˆë‹¤.
-% ë³µì›ì‹œ ë§¤ì„¸ì§€ê°€ (íŠ¹íˆ ê³ ì£¼íŒŒìˆ˜ ì„±ë¶„ì„ ìë¥´ë‹¤ë³´ë‹ˆ;)ì¢€ ê¹¨ì§€ë‚˜ë´…ë‹ˆë‹¤.
+% ¸Å¼¼Áö°¡ Á¦´ë·Î º¹¿øÀÌ µÇ¾ú´ÂÁö À½¿øÀ» ½ÇÇàÇØ º¾´Ï´Ù.
+% º¹¿ø½Ã ¸Å¼¼Áö°¡ (Æ¯È÷ °íÁÖÆÄ¼ö ¼ººĞÀ» ÀÚ¸£´Ùº¸´Ï;)Á» ±úÁö³ªº¾´Ï´Ù.
 % 
 %sound(m_demodulated,fs);
 
-% plotì‹œ ê·¸ë˜í”„ í‘œí˜„ì„ ì–´ë–¤ ë¬¸ìë¡œ í• ê²ƒì¸ì§€ ê²°ì •
+% plot½Ã ±×·¡ÇÁ Ç¥ÇöÀ» ¾î¶² ¹®ÀÚ·Î ÇÒ°ÍÀÎÁö °áÁ¤
 plot_char = '.';
-% ë””ë²„ê·¸ë¥¼ ìœ„í•´ modulation ì „, í›„ ë§¤ì„¸ì§€ë¥¼ ì‹œê°„ ë„ë©”ì¸ ì—ì„œ ê·¸ë˜í”„ë¡œ ë‚˜íƒ€ëƒ…ë‹ˆë‹¤.
+% µğ¹ö±×¸¦ À§ÇØ modulation Àü, ÈÄ ¸Å¼¼Áö¸¦ ½Ã°£ µµ¸ŞÀÎ ¿¡¼­ ±×·¡ÇÁ·Î ³ªÅ¸³À´Ï´Ù.
 figure(1);
 subplot(4,1,1);
 stem(t, m_left, plot_char);
@@ -88,7 +88,7 @@ stem(t, m_left_modulated, plot_char);
 subplot(4,1,4);
 stem(t, m_right_modulated, plot_char);
 
-% ë””ë²„ê·¸ë¥¼ ìœ„í•´ modulation ì „, í›„ ë§¤ì„¸ì§€ë¥¼ F.Tí•˜ì—¬ ê·¸ë˜í”„ë¡œ ë‚˜íƒ€ëƒ…ë‹ˆë‹¤.
+% µğ¹ö±×¸¦ À§ÇØ modulation Àü, ÈÄ ¸Å¼¼Áö¸¦ F.TÇÏ¿© ±×·¡ÇÁ·Î ³ªÅ¸³À´Ï´Ù.
 figure(2);
 
 f =  0:fs/N:(N-1)*fs/N;
@@ -110,7 +110,7 @@ stem(f, m_left_modulatedx, plot_char);
 subplot(4,1,4);
 stem(f, m_right_modulatedx, plot_char);
 
-% ë””ë²„ê·¸ë¥¼ ìœ„í•´ demodulation í›„ ë§¤ì„¸ì§€ë¥¼ ì‹œê°„ ë„ë©”ì¸ ì—ì„œ ê·¸ë˜í”„ë¡œ ë‚˜íƒ€ëƒ…ë‹ˆë‹¤.
+% µğ¹ö±×¸¦ À§ÇØ demodulation ÈÄ ¸Å¼¼Áö¸¦ ½Ã°£ µµ¸ŞÀÎ ¿¡¼­ ±×·¡ÇÁ·Î ³ªÅ¸³À´Ï´Ù.
 figure(3)
 
 subplot(2,1,1);

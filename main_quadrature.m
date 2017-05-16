@@ -117,3 +117,7 @@ stem(t, m_left_demodulated, plot_char);
 
 subplot(2,1,2);
 stem(t, m_right_demodulated, plot_char);
+
+figure(4);
+[h, w] = freqz(b,a);
+plot(w/pi*fs/2, abs(h), '.-');
