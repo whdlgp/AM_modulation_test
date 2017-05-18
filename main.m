@@ -78,15 +78,19 @@ plot_char = '.';
 figure(1);
 subplot(4,1,1);
 stem(t, m_left, plot_char);
+xlabel('m left(t)');
 
 subplot(4,1,2);
 stem(t, m_right, plot_char);
+xlabel('m right(t)');
 
 subplot(4,1,3);
 stem(t, m_left_modulated, plot_char);
+xlabel('m left modul(t)');
 
 subplot(4,1,4);
 stem(t, m_right_modulated, plot_char);
+xlabel('m right modul(t)');
 
 % 디버그를 위해 modulation 전, 후 매세지를 F.T하여 그래프로 나타냅니다.
 figure(2);
@@ -100,21 +104,27 @@ m_right_modulatedx = fft(m_right_modulated);
 
 subplot(4,1,1);
 stem(f, m_leftx, plot_char);
+xlabel('M left(f)');
 
 subplot(4,1,2);
 stem(f, m_rightx, plot_char);
+xlabel('M right(f)');
 
 subplot(4,1,3);
 stem(f, m_left_modulatedx, plot_char);
+xlabel('M left modul(f)');
 
 subplot(4,1,4);
 stem(f, m_right_modulatedx, plot_char);
+xlabel('M right modul(f)');
 
 % 디버그를 위해 demodulation 후 매세지를 시간 도메인 에서 그래프로 나타냅니다.
 figure(3)
 
 subplot(2,1,1);
 stem(t, m_left_demodulated, plot_char);
+xlabel('m left demodul(t)');
 
 subplot(2,1,2);
 stem(t, m_right_demodulated, plot_char);
+xlabel('m right demodul(t)');
